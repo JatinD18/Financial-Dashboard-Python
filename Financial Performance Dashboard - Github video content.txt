@@ -1,1 +1,0 @@
-"Hi, this is my Financial Performance Dashboard built in Power BI. I designed a 7-table Star Schema to ensure optimal performance. Here you can see the Executive Summary with dynamic YoY growth and profit margins. By clicking on the Region slicer, all visuals, including the Target Variance matrix, update instantly."
