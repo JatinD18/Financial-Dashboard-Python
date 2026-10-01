@@ -6,6 +6,8 @@ import warnings
 
 warnings.filterwarnings('ignore')
 
+st.set_page_config(page_title="Financial Performance Dashboard", layout="wide")
+
 @st.cache_data
 def load_data():
     sales = pd.read_csv('Sales.csv', sep='\t')
@@ -63,7 +65,6 @@ current_year_revenue = df[df['Year'] == current_year]['SalesAmount'].sum()
 last_year_revenue = df[df['Year'] == current_year - 1]['SalesAmount'].sum()
 yoy_growth = ((current_year_revenue - last_year_revenue) / last_year_revenue) * 100 if last_year_revenue > 0 else 0
 
-st.set_page_config(page_title="Financial Performance Dashboard", layout="wide")
 st.title("Financial Performance Dashboard")
 st.markdown("### AdventureWorks 2022 | Python & Streamlit Implementation")
 
@@ -98,14 +99,14 @@ with tab1:
         monthly_trend = filtered_df.groupby(filtered_df['OrderDate'].dt.to_period('M')).agg({'SalesAmount': 'sum', 'TotalProductCost': 'sum'}).reset_index()
         monthly_trend['OrderDate'] = monthly_trend['OrderDate'].astype(str)
         fig_trend = px.line(monthly_trend, x='OrderDate', y=['SalesAmount', 'TotalProductCost'], title="Monthly Revenue vs Cost", markers=True)
-        st.plotly_chart(fig_trend, use_container_width=True, config=fast_config)
+        st.plotly_chart(fig_trend, width="stretch", config=fast_config)
         
     with col_chart2:
         st.subheader("Profit by Product Category")
         cat_col = 'Category' if 'Category' in filtered_df.columns else 'Subcategory'
         cat_profit = filtered_df.groupby(cat_col)['Profit'].sum().reset_index()
         fig_cat = px.bar(cat_profit, x=cat_col, y='Profit', title="Total Profit by Category", color='Profit', color_continuous_scale='RdYlGn')
-        st.plotly_chart(fig_cat, use_container_width=True, config=fast_config)
+        st.plotly_chart(fig_cat, width="stretch", config=fast_config)
 
 with tab2:
     st.subheader("Geographic & Reseller Breakdown")
@@ -116,14 +117,14 @@ with tab2:
         region_rev = filtered_df.groupby(region_col)['SalesAmount'].sum().reset_index()
         fig_region = px.bar(region_rev, x='SalesAmount', y=region_col, orientation='h', title="Total Revenue by Country", color='SalesAmount', color_continuous_scale='Blues')
         fig_region.update_layout(yaxis={'categoryorder':'total ascending'})
-        st.plotly_chart(fig_region, use_container_width=True, config=fast_config)
+        st.plotly_chart(fig_region, width="stretch", config=fast_config)
         
     with col_table:
         st.subheader("Top 10 Resellers by Revenue")
         reseller_col = 'ResellerName' if 'ResellerName' in filtered_df.columns else 'Reseller'
         reseller_rev = filtered_df.groupby(reseller_col)['SalesAmount'].sum().reset_index()
         reseller_rev = reseller_rev.sort_values('SalesAmount', ascending=False).head(10)
-        st.dataframe(reseller_rev, use_container_width=True)
+        st.dataframe(reseller_rev, width="stretch")
 
 with tab3:
     st.subheader("Target Variance & Salesperson Performance")
@@ -134,13 +135,15 @@ with tab3:
         gauge={'axis': {'range': [None, f_target * 1.2]}, 'bar': {'color': "darkblue"},
                'steps': [{'range': [0, f_target * 0.8], 'color': "lightgray"}, {'range': [f_target * 0.8, f_target], 'color': "gray"}],
                'threshold': {'line': {'color': "red", 'width': 4}, 'thickness': 0.75, 'value': f_target}}))
-    st.plotly_chart(fig_gauge, use_container_width=True, config=fast_config)
+    st.plotly_chart(fig_gauge, width="stretch", config=fast_config)
     
     st.subheader("Salesperson Target Variance")
     name_col = 'FullName' if 'FullName' in filtered_df.columns else 'Salesperson'
     
     sp_perf = filtered_df.groupby(name_col).agg({'SalesAmount': 'sum', 'TargetAmount': 'sum'}).reset_index()
-    sp_perf['Variance %'] = ((sp_perf['SalesAmount'] - sp_perf['TargetAmount']) / sp_perf['TargetAmount']) * 100
+    sp_perf['Variance %'] = 0.0
+    mask = sp_perf['TargetAmount'] > 0
+    sp_perf.loc[mask, 'Variance %'] = ((sp_perf.loc[mask, 'SalesAmount'] - sp_perf.loc[mask, 'TargetAmount']) / sp_perf.loc[mask, 'TargetAmount']) * 100
     sp_perf = sp_perf.sort_values('SalesAmount', ascending=False)
     
     st.dataframe(
@@ -149,5 +152,5 @@ with tab3:
             'TargetAmount': '${:,.0f}',
             'Variance %': '{:.1f}%'
         }),
-        use_container_width=True
+        width="stretch"
     )
