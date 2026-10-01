@@ -6,47 +6,47 @@ import warnings
 
 warnings.filterwarnings('ignore')
 
-# ==========================================
-# 1. LOAD AND MERGE DATA (Bulletproof)
-# ==========================================
 @st.cache_data
-def load_and_merge_data():
-    def read_file(filename):
-        try:
-            return pd.read_csv(filename, sep='\t')
-        except Exception:
-            return pd.read_csv(filename, sep=',')
-
-    sales = read_file('Sales.csv')
-    product = read_file('Product.csv')
-    region = read_file('Region.csv')
-    reseller = read_file('Reseller.csv')
-    salesperson = read_file('Salesperson.csv')
-    targets = read_file('Targets.csv')
+def load_data():
+    # Read tab-separated files explicitly
+    sales = pd.read_csv('Sales.csv', sep='\t')
+    product = pd.read_csv('Product.csv', sep='\t')
+    region = pd.read_csv('Region.csv', sep='\t')
+    reseller = pd.read_csv('Reseller.csv', sep='\t')
+    salesperson = pd.read_csv('Salesperson.csv', sep='\t')
+    targets = pd.read_csv('Targets.csv', sep='\t')
     
-    # Standardize names
-    sales.rename(columns={'Sales': 'SalesAmount', 'Cost': 'TotalProductCost', 'Unit Price': 'UnitPrice'}, inplace=True)
-    reseller.rename(columns={'Reseller': 'ResellerName'}, inplace=True)
-    salesperson.rename(columns={'Salesperson': 'FullName'}, inplace=True)
-    targets.rename(columns={'Target': 'TargetAmount'}, inplace=True)
+    # Rename columns to match our expected schema
+    sales = sales.rename(columns={'Sales': 'SalesAmount', 'Cost': 'TotalProductCost', 'Unit Price': 'UnitPrice'})
+    reseller = reseller.rename(columns={'Reseller': 'ResellerName'})
+    salesperson = salesperson.rename(columns={'Salesperson': 'FullName'})
+    targets = targets.rename(columns={'Target': 'TargetAmount'})
     
-    # Clean monetary columns (remove $ and ,)
-    for df, col in [(sales, 'SalesAmount'), (sales, 'TotalProductCost'), (sales, 'UnitPrice'), (targets, 'TargetAmount')]:
-        if col in df.columns:
-            df[col] = df[col].astype(str).str.replace(r'[$,]', '', regex=True)
-            df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0)
+    # Clean monetary columns: remove '$' and ',' then convert to numeric
+    for col in ['SalesAmount', 'TotalProductCost', 'UnitPrice']:
+        if col in sales.columns:
+            sales[col] = sales[col].astype(str).str.replace(r'[$,]', '', regex=True)
+            sales[col] = pd.to_numeric(sales[col], errors='coerce').fillna(0)
+            
+    if 'TargetAmount' in targets.columns:
+        targets['TargetAmount'] = targets['TargetAmount'].astype(str).str.replace(r'[$,]', '', regex=True)
+        targets['TargetAmount'] = pd.to_numeric(targets['TargetAmount'], errors='coerce').fillna(0)
+    else:
+        targets['TargetAmount'] = 0.0
 
-    # Merge Tables (Star Schema)
+    # Merge tables (Star Schema)
     df = sales.merge(product, on='ProductKey', how='left')
     df = df.merge(region, on='SalesTerritoryKey', how='left')
     df = df.merge(reseller, on='ResellerKey', how='left')
     df = df.merge(salesperson, on='EmployeeKey', how='left')
     
-    if 'EmployeeID' in targets.columns and 'EmployeeID' in df.columns:
+    # Merge targets safely
+    if 'EmployeeID' in df.columns and 'EmployeeID' in targets.columns:
         df = df.merge(targets[['EmployeeID', 'TargetAmount']], on='EmployeeID', how='left')
     else:
         df['TargetAmount'] = 0.0
-    
+        
+    # Final cleanup
     df['OrderDate'] = pd.to_datetime(df['OrderDate'], errors='coerce')
     df['SalesAmount'] = pd.to_numeric(df['SalesAmount'], errors='coerce').fillna(0)
     df['TotalProductCost'] = pd.to_numeric(df['TotalProductCost'], errors='coerce').fillna(0)
@@ -54,11 +54,9 @@ def load_and_merge_data():
     
     return df
 
-df = load_and_merge_data()
+df = load_data()
 
-# ==========================================
-# 2. CALCULATE FINANCIAL KPIs
-# ==========================================
+# Calculate KPIs
 df['Profit'] = df['SalesAmount'] - df['TotalProductCost']
 df['Year'] = df['OrderDate'].dt.year
 
@@ -72,16 +70,13 @@ current_year_revenue = df[df['Year'] == current_year]['SalesAmount'].sum()
 last_year_revenue = df[df['Year'] == current_year - 1]['SalesAmount'].sum()
 yoy_growth = ((current_year_revenue - last_year_revenue) / last_year_revenue) * 100 if last_year_revenue > 0 else 0
 
-# ==========================================
-# 3. STREAMLIT UI SETUP
-# ==========================================
+# Streamlit UI
 st.set_page_config(page_title="Financial Performance Dashboard", layout="wide")
 st.title("📊 Financial Performance Dashboard 📊")
 st.markdown("### AdventureWorks 2022 | Python & Streamlit Implementation")
 
 st.sidebar.header("Filters")
 selected_year = st.sidebar.multiselect("Select Year", options=sorted(df['Year'].dropna().unique()), default=sorted(df['Year'].dropna().unique())[-2:])
-
 region_col = 'Country' if 'Country' in df.columns else 'Region'
 selected_region = st.sidebar.multiselect("Select Region", options=sorted(df[region_col].dropna().unique()), default=sorted(df[region_col].dropna().unique()))
 
@@ -92,13 +87,9 @@ f_profit = filtered_df['Profit'].sum()
 f_margin = (f_profit / f_revenue) * 100 if f_revenue > 0 else 0
 f_target = filtered_df['TargetAmount'].sum()
 
-# ==========================================
-# 4. DASHBOARD TABS
-# ==========================================
 tab1, tab2, tab3 = st.tabs(["📊 Executive Summary 📊", "🌍 Regional Performance 🌍", "🎯 Product & Targets 🎯"])
 fast_config = {'displayModeBar': False, 'responsive': True}
 
-# --- TAB 1 ---
 with tab1:
     st.subheader("High-Level Financial Health")
     col1, col2, col3, col4 = st.columns(4)
@@ -124,7 +115,6 @@ with tab1:
         fig_cat = px.bar(cat_profit, x=cat_col, y='Profit', title="Total Profit by Category", color='Profit', color_continuous_scale='RdYlGn')
         st.plotly_chart(fig_cat, use_container_width=True, config=fast_config)
 
-# --- TAB 2 ---
 with tab2:
     st.subheader("Geographic & Reseller Breakdown")
     col_map, col_table = st.columns(2)
@@ -143,7 +133,6 @@ with tab2:
         reseller_rev = reseller_rev.sort_values('SalesAmount', ascending=False).head(10)
         st.dataframe(reseller_rev, use_container_width=True)
 
-# --- TAB 3 ---
 with tab3:
     st.subheader("Target Variance & Salesperson Performance")
     st.subheader("Overall Target Achievement")
@@ -162,7 +151,6 @@ with tab3:
     sp_perf['Variance %'] = ((sp_perf['SalesAmount'] - sp_perf['TargetAmount']) / sp_perf['TargetAmount']) * 100
     sp_perf = sp_perf.sort_values('SalesAmount', ascending=False)
     
-    # Safely formatted dataframe
     st.dataframe(
         sp_perf[[name_col, 'SalesAmount', 'TargetAmount', 'Variance %']].style.format({
             'SalesAmount': '${:,.0f}',
