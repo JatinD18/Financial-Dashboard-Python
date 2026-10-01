@@ -8,7 +8,6 @@ warnings.filterwarnings('ignore')
 
 @st.cache_data
 def load_data():
-    # Read tab-separated files explicitly
     sales = pd.read_csv('Sales.csv', sep='\t')
     product = pd.read_csv('Product.csv', sep='\t')
     region = pd.read_csv('Region.csv', sep='\t')
@@ -16,13 +15,11 @@ def load_data():
     salesperson = pd.read_csv('Salesperson.csv', sep='\t')
     targets = pd.read_csv('Targets.csv', sep='\t')
     
-    # Rename columns to match our expected schema
     sales = sales.rename(columns={'Sales': 'SalesAmount', 'Cost': 'TotalProductCost', 'Unit Price': 'UnitPrice'})
     reseller = reseller.rename(columns={'Reseller': 'ResellerName'})
     salesperson = salesperson.rename(columns={'Salesperson': 'FullName'})
     targets = targets.rename(columns={'Target': 'TargetAmount'})
     
-    # Clean monetary columns: remove '$' and ',' then convert to numeric
     for col in ['SalesAmount', 'TotalProductCost', 'UnitPrice']:
         if col in sales.columns:
             sales[col] = sales[col].astype(str).str.replace(r'[$,]', '', regex=True)
@@ -34,19 +31,16 @@ def load_data():
     else:
         targets['TargetAmount'] = 0.0
 
-    # Merge tables (Star Schema)
     df = sales.merge(product, on='ProductKey', how='left')
     df = df.merge(region, on='SalesTerritoryKey', how='left')
     df = df.merge(reseller, on='ResellerKey', how='left')
     df = df.merge(salesperson, on='EmployeeKey', how='left')
     
-    # Merge targets safely
     if 'EmployeeID' in df.columns and 'EmployeeID' in targets.columns:
         df = df.merge(targets[['EmployeeID', 'TargetAmount']], on='EmployeeID', how='left')
     else:
         df['TargetAmount'] = 0.0
         
-    # Final cleanup
     df['OrderDate'] = pd.to_datetime(df['OrderDate'], errors='coerce')
     df['SalesAmount'] = pd.to_numeric(df['SalesAmount'], errors='coerce').fillna(0)
     df['TotalProductCost'] = pd.to_numeric(df['TotalProductCost'], errors='coerce').fillna(0)
@@ -56,7 +50,6 @@ def load_data():
 
 df = load_data()
 
-# Calculate KPIs
 df['Profit'] = df['SalesAmount'] - df['TotalProductCost']
 df['Year'] = df['OrderDate'].dt.year
 
@@ -70,9 +63,8 @@ current_year_revenue = df[df['Year'] == current_year]['SalesAmount'].sum()
 last_year_revenue = df[df['Year'] == current_year - 1]['SalesAmount'].sum()
 yoy_growth = ((current_year_revenue - last_year_revenue) / last_year_revenue) * 100 if last_year_revenue > 0 else 0
 
-# Streamlit UI
 st.set_page_config(page_title="Financial Performance Dashboard", layout="wide")
-st.title("📊 Financial Performance Dashboard 📊")
+st.title("Financial Performance Dashboard")
 st.markdown("### AdventureWorks 2022 | Python & Streamlit Implementation")
 
 st.sidebar.header("Filters")
@@ -87,7 +79,7 @@ f_profit = filtered_df['Profit'].sum()
 f_margin = (f_profit / f_revenue) * 100 if f_revenue > 0 else 0
 f_target = filtered_df['TargetAmount'].sum()
 
-tab1, tab2, tab3 = st.tabs(["📊 Executive Summary 📊", "🌍 Regional Performance 🌍", "🎯 Product & Targets 🎯"])
+tab1, tab2, tab3 = st.tabs(["Executive Summary", "Regional Performance", "Product & Targets"])
 fast_config = {'displayModeBar': False, 'responsive': True}
 
 with tab1:
