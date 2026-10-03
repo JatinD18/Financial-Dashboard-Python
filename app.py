@@ -1,0 +1,71 @@
+import streamlit as st
+import pandas as pd
+import plotly.express as px
+st.set_page_config(page_title="Financial Dashboard", layout="wide")
+st.title("Financial Performance Dashboard")
+sales = pd.read_csv("Sales.csv", sep="\t")
+product = pd.read_csv("Product.csv", sep="\t")
+region = pd.read_csv("Region.csv", sep="\t")
+reseller = pd.read_csv("Reseller.csv", sep="\t")
+salesperson = pd.read_csv("Salesperson.csv", sep="\t")
+targets = pd.read_csv("Targets.csv", sep="\t")
+sales = sales.rename(columns={"Sales": "Revenue", "Cost": "TotalCost"})
+reseller = reseller.rename(columns={"Reseller": "ResellerName"})
+salesperson = salesperson.rename(columns={"Salesperson": "FullName"})
+targets = targets.rename(columns={"Target": "TargetAmount"})
+sales["Revenue"] = pd.to_numeric(sales["Revenue"].astype(str).str.replace(r"[$,]", "", regex=True), errors="coerce").fillna(0)
+sales["TotalCost"] = pd.to_numeric(sales["TotalCost"].astype(str).str.replace(r"[$,]", "", regex=True), errors="coerce").fillna(0)
+targets["TargetAmount"] = pd.to_numeric(targets["TargetAmount"].astype(str).str.replace(r"[$,]", "", regex=True), errors="coerce").fillna(0)
+df = sales.merge(product, on="ProductKey", how="left")
+df = df.merge(region, on="SalesTerritoryKey", how="left")
+df = df.merge(reseller, on="ResellerKey", how="left")
+df = df.merge(salesperson, on="EmployeeKey", how="left")
+df = df.merge(targets[["EmployeeID", "TargetAmount"]], on="EmployeeID", how="left") if ("EmployeeID" in df.columns and "EmployeeID" in targets.columns) else df.assign(TargetAmount=0.0)
+df["TargetAmount"] = pd.to_numeric(df["TargetAmount"], errors="coerce").fillna(0)
+df["OrderDate"] = pd.to_datetime(df["OrderDate"], errors="coerce")
+df["Year"] = df["OrderDate"].dt.year
+df["Profit"] = df["Revenue"] - df["TotalCost"]
+region_col = "Country" if "Country" in df.columns else ("Region" if "Region" in df.columns else "SalesTerritory")
+cat_col = "Category" if "Category" in df.columns else ("Subcategory" if "Subcategory" in df.columns else "ProductKey")
+name_col = "FullName" if "FullName" in df.columns else ("ResellerName" if "ResellerName" in df.columns else "Salesperson")
+years = sorted(df["Year"].dropna().unique().tolist())
+regions = sorted(df[region_col].dropna().unique().tolist()) if region_col in df.columns else []
+st.sidebar.header("Filters")
+year_pick = st.sidebar.multiselect("Select Year", options=years, default=years[-2:] if len(years) > 1 else years)
+region_pick = st.sidebar.multiselect("Select Region", options=regions, default=regions)
+view = df[df["Year"].isin(year_pick)]
+view = view[view[region_col].isin(region_pick)] if region_col in view.columns else view
+rev = float(view["Revenue"].sum())
+prof = float(view["Profit"].sum())
+tgt = float(view["TargetAmount"].sum())
+margin = prof / max(rev, 1.0) * 100.0
+variance = (rev - tgt) / max(tgt, 1.0) * 100.0
+last_y = float(max(years)) if years else 2020.0
+cur = float(df[df["Year"] == last_y]["Revenue"].sum())
+prev = float(df[df["Year"] == last_y - 1]["Revenue"].sum())
+yoy = (cur - prev) / max(prev, 1.0) * 100.0
+c1, c2, c3, c4, c5 = st.columns(5)
+c1.metric("Total Revenue", "$" + format(rev, ",.0f"))
+c2.metric("Total Profit", "$" + format(prof, ",.0f"))
+c3.metric("Profit Margin", format(margin, ".1f") + "%")
+c4.metric("Target Variance", format(variance, "+.1f") + "%")
+c5.metric("YoY Growth", format(yoy, "+.1f") + "%")
+st.header("Revenue vs Cost Over Time")
+monthly = view.copy()
+monthly["Month"] = monthly["OrderDate"].dt.to_period("M").astype(str)
+monthly = monthly.groupby("Month")[["Revenue", "TotalCost"]].sum().reset_index()
+fig1 = px.line(monthly, x="Month", y=["Revenue", "TotalCost"], title="Monthly Revenue vs Cost", markers=True)
+st.plotly_chart(fig1, use_container_width=True)
+st.header("Profit by Category")
+catg = view.groupby(cat_col)["Profit"].sum().reset_index()
+fig2 = px.bar(catg, x=cat_col, y="Profit", title="Profit by " + cat_col, color="Profit", color_continuous_scale="RdYlGn")
+st.plotly_chart(fig2, use_container_width=True)
+st.header("Revenue by Region")
+reg = view.groupby(region_col)["Revenue"].sum().reset_index().sort_values("Revenue") if region_col in view.columns else pd.DataFrame()
+fig3 = px.bar(reg, x="Revenue", y=region_col, orientation="h", title="Revenue by " + region_col, color="Revenue", color_continuous_scale="Blues") if not reg.empty else None
+st.plotly_chart(fig3, use_container_width=True) if fig3 is not None else None
+st.header("Top 10 Performers by Revenue")
+res = view.groupby(name_col)["Revenue"].sum().reset_index().sort_values("Revenue", ascending=False).head(10) if name_col in view.columns else pd.DataFrame()
+st.dataframe(res, use_container_width=True) if not res.empty else None
+st.header("Recent Transactions")
+st.dataframe(view[["OrderDate", "Revenue", "TotalCost", "Profit"]].head(10), use_container_width=True)
