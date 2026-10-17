@@ -4,7 +4,9 @@ An interactive executive P&L dashboard built on the **Adventure Works** sample d
 turning raw sales and cost tables into a filterable, decision-ready financial view.
 
 🔗 **Live app:** [Financial Performance Dashboard](https://financial-dashboard-py-str.streamlit.app)
+
 📦 **Code:** [Financial Performance Dashboard - GitHub Repository (app.py)](https://github.com/JatinD18/Financial-Dashboard-Python)
+
 🗃️ **Dataset:** [Adventure Works (Excel tables) on Kaggle](https://www.kaggle.com/datasets/algorismus/adventure-works-in-excel-tables)
 
 ---
