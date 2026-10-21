@@ -1,27 +1,24 @@
-# 💰 Financial Performance Dashboard (Python + Streamlit)
+# 💰 Financial Performance Dashboard — Streamlit + Power BI
 
-An interactive executive P&L dashboard built on the **Adventure Works** sample dataset,
-turning raw sales and cost tables into a filterable, decision-ready financial view.
+An executive P&L view built on the **Adventure Works** sample dataset, delivered in **two
+complementary layers**:
 
-🔗 **Live app:** [Financial Performance Dashboard](https://financial-dashboard-py-str.streamlit.app)
+1. **Python + Streamlit app** — code-driven, interactive, deployable-as-code. Sidebar
+   slicers recompute KPIs and redraw Plotly charts live.
+2. **Power BI report** — drag-and-drop, enterprise-standard, built for stakeholder
+   self-service and DAX-based reporting.
 
-📦 **Code:** [Financial Performance Dashboard - GitHub Repository (app.py)](https://github.com/JatinD18/Financial-Dashboard-Python)
+> Showing both is deliberate: the Streamlit layer proves I can build custom, reproducible
+> analytics logic in code; the Power BI layer proves I can package the same insight into the
+> tool business users actually consume. Same data, same metrics, two delivery modes.
 
+🔗 **Live Streamlit app:** [Financial Performance Dashboard](https://financial-dashboard-py-str.streamlit.app)
+📦 **Code:** [Financial-Dashboard-Python](https://github.com/JatinD18/Financial-Dashboard-Python)
+📊 **Power BI report:** `_Power BI screenshot / PDF in `dashboard/` below_`
 🗃️ **Dataset:** [Adventure Works (Excel tables) on Kaggle](https://www.kaggle.com/datasets/algorismus/adventure-works-in-excel-tables)
-
 ---
 
-## Overview
-
-The dashboard answers one question a CFO asks every month: *where is money being made,
-and where is it leaking?* It exposes total revenue, profit, margin and year-over-year
-growth, then lets a user slice the entire view by **Year (2017–2020)** and **Region**
-(Australia, Canada, France, Germany, United Kingdom, United States — the six markets in
-the Adventure Works geography dimension).
-
-Unlike a static report, every filter recomputes the KPI cards and redraws the charts live.
-
-### Headline KPIs (default view)
+## Headline KPIs (default view)
 
 | KPI | Value |
 |---|---:|
@@ -30,68 +27,54 @@ Unlike a static report, every filter recomputes the KPI cards and redraws the ch
 | Profit Margin | 1.3% |
 | YoY Growth | −61.1% |
 
-*Reconciliation (pure arithmetic on the displayed figures):*
-margin = 999,495 ÷ 77,548,570 ≈ **1.3%**, implying total cost ≈ **$76,549,075**
-(77,548,570 − 999,495). The KPI row is internally consistent.
+*Reconciliation (arithmetic on the displayed figures):* margin = 999,495 ÷ 77,548,570 ≈
+**1.3%**, implying total cost ≈ **$76,549,075**. The KPI row is internally consistent.
+
+**Cross-tool validation:** these same four figures reproduce in the Power BI report
+`[confirm: same dataset + same margin formula?]`. Matching KPIs across two independently
+built tools is a QA signal — it shows the aggregation logic was verified, not eyeballed.
 
 ### Why these numbers are the point
-A thin **1.3% margin** paired with a **−61.1% YoY** contraction is *not* a flattering
-dashboard — and that is deliberate. The tool is built to surface a business under
-pressure (barely breaking even, revenue falling year over year) so attention lands on the
-regions and product categories driving the squeeze, rather than on a celebratory trend line.
+A thin **1.3% margin** with a **−61.1% YoY** contraction is *not* a flattering dashboard —
+and that's intentional. The tool surfaces a business under pressure so attention lands on
+the regions and categories driving the squeeze, not on a celebratory trend line.
 
 ---
 
-## Views
-
-- **Revenue vs Cost Over Time** — interactive line/area trend of top-line and expense across the filtered period (Plotly: hover, zoom, legend toggle).
-- **Profit by Category** — where margin is created or eroded, broken down by Adventure Works product categories.
-- **Top 10 Performers** — ranked contributors within the current filter.
-
-All charts are rendered with **`plotly.express`**, so they are fully interactive in the
-browser (hover tooltips, pan/zoom, click-to-toggle series) instead of flat images.
-
----
-
-## Filters (sidebar)
+## Layer 1 — Streamlit (interactive)
 
 | Filter | Options |
 |---|---|
 | Year | 2017, 2018, 2019, 2020 |
 | Region | Australia, Canada, France, Germany, United Kingdom, United States |
 
-Selecting a year/region re-runs the aggregation and updates every KPI card and chart.
+Selecting a year/region re-runs the Pandas aggregation and updates every `st.metric` card
+and chart. Charts use **`plotly.express`** (hover, zoom, click-to-toggle).
+
+- **Revenue vs Cost Over Time** — top-line vs expense trend
+- **Profit by Category** — where margin is created or eroded
+- **Top 10 Performers** — ranked contributors within the current filter
+
+## Layer 2 — Power BI (self-service)
+
+`[Fill: list the actual visuals/pages on your Power BI report, e.g. "KPI card row, revenue
+trend line, profit-by-category bar, region map, Top-10 table"]`
+
+Built from the same Adventure Works extracts, the report gives stakeholders filter/ drill
+without touching code. `[Confirm: did you use DAX measures, imported tables, or both?]`
+
+![Power BI Dashboard](https://github.com/JatinD18/Financial-Dashboard-Python/blob/main/data/dashboard/assets/powerbi_financial_dashboard.png)
 
 ---
 
 ## Tech stack
 
-- **Python + Pandas** — data loading, joins across the star-schema tables, revenue/profit/margin/YoY aggregation
-- **Plotly Express** — interactive charts
-- **Streamlit** — sidebar slicers, `st.metric` KPI cards, multi-chart layout
-- **Streamlit Cloud** — deployment
-- **Adventure Works** — Microsoft's canonical sample warehouse (fact + dimension tables), used here as a realistic enterprise schema rather than a single flat CSV
-
----
-
-## How to run locally
-
-```bash
-git clone https://github.com/JatinD18/Financial-Dashboard-Python.git
-cd Financial-Dashboard-Python
-pip install -r requirements.txt
-streamlit run app.py
-```
-
-`requirements.txt` (typical):
-
-```text
-streamlit
-pandas
-plotly
-```
-
-> Adjust `app.py` / filenames to match the actual entry point in the repo.
+- **Python + Pandas** — loading, star-schema joins, revenue/profit/margin/YoY logic
+- **Plotly Express** — interactive Streamlit charts
+- **Streamlit + Streamlit Cloud** — app UI and deployment
+- **Power BI (+ DAX)** `[confirm]` — stakeholder-facing report
+- **Adventure Works** — Microsoft's canonical sample warehouse (fact + dimension tables),
+  used here as a realistic enterprise schema rather than a single flat CSV
 
 ---
 
@@ -102,15 +85,36 @@ Financial-Dashboard-Python/
 │
 ├── app.py                  # Streamlit entry point
 ├── requirements.txt        # streamlit, pandas, plotly
+├── data/                   # Adventure Works CSV extracts
+├── dashboard/
+│   ├── assets/
+│   │   └── powerbi_financial_dashboard.png   # Power BI screenshot (README hero)
+│   ├── Financial_Dashboard.pbix              # editable Power BI file
+│   └── Financial_Dashboard.pdf               # exported PDF for quick viewing
+├── .gitignore
 └── README.md
 ```
 
-> Align the file names above with what is actually committed.
+`[Adjust file/folder names to match what you actually committed.]`
+
+---
+
+## How to run
+
+**Streamlit (local):**
+```bash
+git clone https://github.com/JatinD18/Financial-Dashboard-Python.git
+cd Financial-Dashboard-Python
+pip install -r requirements.txt
+streamlit run app.py
+```
+
+**Power BI:** open `dashboard/Financial_Dashboard.pbix` in Power BI Desktop, or view the
+exported PDF in the same folder.
 
 ---
 
 ## Author
 
-**🤵🏼Jatin Naresh Dolas**
-
+**Jatin Naresh Dolas**
 [LinkedIn](https://www.linkedin.com/in/jatin-dolas) | [GitHub](https://github.com/JatinD18)
