@@ -13,8 +13,11 @@ complementary layers**:
 > tool business users actually consume. Same data, same metrics, two delivery modes.
 
 🔗 **Live Streamlit app:** [Financial Performance Dashboard](https://financial-dashboard-py-str.streamlit.app)
+
 📦 **Code:** [Financial-Dashboard-Python](https://github.com/JatinD18/Financial-Dashboard-Python)
+
 📊 **Power BI report:** `_Power BI screenshot / PDF in `dashboard/` below_`
+
 🗃️ **Dataset:** [Adventure Works (Excel tables) on Kaggle](https://www.kaggle.com/datasets/algorismus/adventure-works-in-excel-tables)
 ---
 
