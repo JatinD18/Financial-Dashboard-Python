@@ -16,7 +16,9 @@ complementary layers**:
 
 📦 **Code:** [Financial-Dashboard-Python](https://github.com/JatinD18/Financial-Dashboard-Python)
 
-📊 **Power BI report:** `_Power BI screenshot / PDF in `dashboard/` below_`
+📊 **Power BI report:** `It's in the data/dashboard folder`
+[PDF](https://github.com/JatinD18/Financial-Dashboard-Python/blob/main/data/dashboard/Financial_Dashboard.pdf)
+[PBIX](https://github.com/JatinD18/Financial-Dashboard-Python/blob/main/data/dashboard/Financial_Dashboard.pbix)
 
 🗃️ **Dataset:** [Adventure Works (Excel tables) on Kaggle](https://www.kaggle.com/datasets/algorismus/adventure-works-in-excel-tables)
 ---
