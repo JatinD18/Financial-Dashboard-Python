@@ -96,11 +96,6 @@ Financial-Dashboard-Python/
 │   └── Financial_Dashboard.pdf               # exported PDF for quick viewing
 ├── .gitignore
 └── README.md
-```
-
-`[Adjust file/folder names to match what you actually committed.]`
-
----
 
 ## How to run
 
