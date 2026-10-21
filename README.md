@@ -60,11 +60,8 @@ and chart. Charts use **`plotly.express`** (hover, zoom, click-to-toggle).
 
 ## Layer 2 — Power BI (self-service)
 
-`[Fill: list the actual visuals/pages on your Power BI report, e.g. "KPI card row, revenue
-trend line, profit-by-category bar, region map, Top-10 table"]`
-
 Built from the same Adventure Works extracts, the report gives stakeholders filter/ drill
-without touching code. `[Confirm: did you use DAX measures, imported tables, or both?]`
+without touching code.
 
 ![Power BI Dashboard](https://github.com/JatinD18/Financial-Dashboard-Python/blob/main/data/dashboard/assets/powerbi_financial_dashboard.png)
 
