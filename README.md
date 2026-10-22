@@ -121,4 +121,6 @@ exported PDF in the same folder.
 
 **Jatin Naresh Dolas**
 
-[LinkedIn](https://www.linkedin.com/in/jatin-dolas) | [GitHub](https://github.com/JatinD18)
+[![GitHub](https://img.shields.io/badge/GitHub-JatinD18-181717?logo=github&logoColor=white)](https://github.com/JatinD18) | [![LinkedIn](https://img.shields.io/badge/LinkedIn-Jatin%20Dolas-0A66C2?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/jatin-dolas)
+
+---
