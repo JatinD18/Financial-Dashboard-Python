@@ -14,7 +14,8 @@ complementary layers**:
 > analytics logic in code; the Power BI layer proves I can package the same insight into the
 > tool business users actually consume. Same data, same metrics, two delivery modes.
 
-🔗 **Live Streamlit app:** [Financial Performance Dashboard](https://financial-dashboard-py-str.streamlit.app)
+
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://financial-dashboard-py-str.streamlit.app)
 
 📦 **Code:** [Financial-Dashboard-Python](https://github.com/JatinD18/Financial-Dashboard-Python)
 
