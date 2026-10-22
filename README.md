@@ -1,3 +1,5 @@
+<div align="center">
+
 # 💰 Financial Performance Dashboard — Streamlit + Power BI
 
 An executive P&L view built on the **Adventure Works** sample dataset, delivered in **two
@@ -21,6 +23,8 @@ complementary layers**:
 [PBIX](https://github.com/JatinD18/Financial-Dashboard-Python/blob/main/data/dashboard/Financial_Dashboard.pbix)
 
 🗃️ **Dataset:** [Adventure Works (Excel tables) on Kaggle](https://www.kaggle.com/datasets/algorismus/adventure-works-in-excel-tables)
+
+</div>
 
 ---
 
