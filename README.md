@@ -17,12 +17,10 @@ complementary layers**:
 
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://financial-dashboard-py-str.streamlit.app)
 
-[![Code Script](https://img.shields.io/badge/app.py%20%7C%20Code-blue)](https://github.com/JatinD18/Financial-Dashboard-Python/blob/main/app.py)
-
-📦 **Code:** [Financial-Dashboard-Python](https://github.com/JatinD18/Financial-Dashboard-Python)
+[![Code Script](https://img.shields.io/badge/app.py%20%7C%20Code-blue)](https://github.com/JatinD18/Financial-Dashboard-Python/blob/main/app.py) 📊 **Power BI report:** — [[!PDF](https://img.shields.io/badge/PDF-red)](https://github.com/JatinD18/Financial-Dashboard-Python/blob/main/data/dashboard/Financial_Dashboard.pdf)
 
 📊 **Power BI report:** `It's in the data/dashboard folder`
-[PDF](https://github.com/JatinD18/Financial-Dashboard-Python/blob/main/data/dashboard/Financial_Dashboard.pdf)
+[[!PDF](https://img.shields.io/badge/PDF-red)](https://github.com/JatinD18/Financial-Dashboard-Python/blob/main/data/dashboard/Financial_Dashboard.pdf)
 [PBIX](https://github.com/JatinD18/Financial-Dashboard-Python/blob/main/data/dashboard/Financial_Dashboard.pbix)
 
 🗃️ **Dataset:** [Adventure Works (Excel tables) on Kaggle](https://www.kaggle.com/datasets/algorismus/adventure-works-in-excel-tables)
