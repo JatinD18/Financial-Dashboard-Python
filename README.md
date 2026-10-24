@@ -19,8 +19,6 @@ complementary layers**:
 
 📊 **Power BI report:** `It's in the data/dashboard folder` — [![PDF](https://img.shields.io/badge/PDF-red)](https://github.com/JatinD18/Financial-Dashboard-Python/blob/main/data/dashboard/Financial_Dashboard.pdf) [![PBIX](https://img.shields.io/badge/PBIX-yellow)](https://github.com/JatinD18/Financial-Dashboard-Python/blob/main/data/dashboard/Financial_Dashboard.pbix)
 
-🗃️ **Dataset:** [Adventure Works (Excel tables) on Kaggle](https://www.kaggle.com/datasets/algorismus/adventure-works-in-excel-tables)
-
 🗃️ **Dataset Adventure Works (Excel tables):** [![Kaggle](https://img.shields.io/badge/Kaggle-20BEFF?style=for-the-badge&logo=Kaggle&logoColor=white)](https://www.kaggle.com/datasets/algorismus/adventure-works-in-excel-tables)
 
 </div>
