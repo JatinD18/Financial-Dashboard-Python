@@ -17,6 +17,8 @@ complementary layers**:
 
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://financial-dashboard-py-str.streamlit.app)
 
+[![Code Script](https://img.shields.io/badge/app.py%20%7C%20Code-blue)](https://github.com/JatinD18/Financial-Dashboard-Python/blob/main/app.py)
+
 📦 **Code:** [Financial-Dashboard-Python](https://github.com/JatinD18/Financial-Dashboard-Python)
 
 📊 **Power BI report:** `It's in the data/dashboard folder`
