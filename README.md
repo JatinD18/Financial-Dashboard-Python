@@ -17,11 +17,9 @@ complementary layers**:
 
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://financial-dashboard-py-str.streamlit.app)
 
-[![Code Script](https://img.shields.io/badge/app.py%20%7C%20Code-blue)](https://github.com/JatinD18/Financial-Dashboard-Python/blob/main/app.py) 📊 **Power BI report:** — [[!PDF](https://img.shields.io/badge/PDF-red)](https://github.com/JatinD18/Financial-Dashboard-Python/blob/main/data/dashboard/Financial_Dashboard.pdf)
+[![Code Script](https://img.shields.io/badge/app.py%20%7C%20Code-blue)](https://github.com/JatinD18/Financial-Dashboard-Python/blob/main/app.py)
 
-📊 **Power BI report:** `It's in the data/dashboard folder`
-[[!PDF](https://img.shields.io/badge/PDF-red)](https://github.com/JatinD18/Financial-Dashboard-Python/blob/main/data/dashboard/Financial_Dashboard.pdf)
-[PBIX](https://github.com/JatinD18/Financial-Dashboard-Python/blob/main/data/dashboard/Financial_Dashboard.pbix)
+📊 **Power BI report:** `It's in the data/dashboard folder` — [![PDF](https://img.shields.io/badge/PDF-red)](https://github.com/JatinD18/Financial-Dashboard-Python/blob/main/data/dashboard/Financial_Dashboard.pdf) [![PBIX](https://img.shields.io/badge/PBIX-yellow)](https://github.com/JatinD18/Financial-Dashboard-Python/blob/main/data/dashboard/Financial_Dashboard.pbix)
 
 🗃️ **Dataset:** [Adventure Works (Excel tables) on Kaggle](https://www.kaggle.com/datasets/algorismus/adventure-works-in-excel-tables)
 
