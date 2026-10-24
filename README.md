@@ -15,7 +15,7 @@ complementary layers**:
 > tool business users actually consume. Same data, same metrics, two delivery modes.
 
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://financial-dashboard-py-str.streamlit.app)   [![Code Script](https://img.shields.io/badge/app.py%20%7C%20Code%in%GitHub-blue)](https://github.com/JatinD18/Financial-Dashboard-Python/blob/main/app.py)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://financial-dashboard-py-str.streamlit.app)   [![Code Script](https://img.shields.io/badge/app.py%20%7C%20Code%20%7C%20in%20%7C%20GithHub-blue)](https://github.com/JatinD18/Financial-Dashboard-Python/blob/main/app.py)
 
 📊 **Power BI report:** `It's in the data/dashboard folder` — [![PDF](https://img.shields.io/badge/PDF-red)](https://github.com/JatinD18/Financial-Dashboard-Python/blob/main/data/dashboard/Financial_Dashboard.pdf) [![PBIX](https://img.shields.io/badge/PBIX-yellow)](https://github.com/JatinD18/Financial-Dashboard-Python/blob/main/data/dashboard/Financial_Dashboard.pbix)
 
